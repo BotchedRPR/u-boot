@@ -456,17 +456,17 @@ void mtk_serial_initialize(void)
 
 static inline void _debug_uart_init(void)
 {
-	struct mtk_serial_priv priv;
+	//struct mtk_serial_priv priv;
 
-	memset(&priv, 0, sizeof(struct mtk_serial_priv));
-	priv.regs = (void *) CONFIG_VAL(DEBUG_UART_BASE);
-	priv.fixed_clk_rate = CONFIG_DEBUG_UART_CLOCK;
+	//memset(&priv, 0, sizeof(struct mtk_serial_priv));
+	//priv.regs = (void *) CONFIG_VAL(DEBUG_UART_BASE);
+	//priv.fixed_clk_rate = CONFIG_DEBUG_UART_CLOCK;
 
-	writel(0, &priv.regs->ier);
-	writel(UART_MCRVAL, &priv.regs->mcr);
-	writel(UART_FCRVAL, &priv.regs->fcr);
+	//writel(0, &priv.regs->ier);
+	//writel(UART_MCRVAL, &priv.regs->mcr);
+	//writel(UART_FCRVAL, &priv.regs->fcr);
 
-	_mtk_serial_setbrg(&priv, CONFIG_BAUDRATE, priv.fixed_clk_rate);
+	//_mtk_serial_setbrg(&priv, CONFIG_BAUDRATE, priv.fixed_clk_rate);
 }
 
 static inline void _debug_uart_putc(int ch)
