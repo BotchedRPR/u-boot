@@ -1,0 +1,311 @@
+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
+/*
+ * Copyright (C) 2024 Igor Belwon
+ */
+
+#include <dt-bindings/interrupt-controller/arm-gic.h>
+#include <dt-bindings/interrupt-controller/irq.h>
+
+/ {
+	compatible = "mediatek,mt6878";
+	interrupt-parent = <&gic>;
+	#address-cells = <2>;
+	#size-cells = <2>;
+
+	cpus {
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		/* Cluster 0, Cortex-A78 */
+		cpu0: cpu@0 {
+			device_type = "cpu";
+			compatible = "arm,cortex-a78";
+			reg = <0x0>;
+			enable-method = "psci";
+			cpu-idle-states = <&cpuoff_l &clusteroff_l &mcusysoff_l
+							   &system_vcore &s2idle>;
+		};
+
+		cpu1: cpu@1 {
+			device_type = "cpu";
+			compatible = "arm,cortex-a78";
+			reg = <0x1>;
+			enable-method = "psci";
+			cpu-idle-states = <&cpuoff_l &clusteroff_l &mcusysoff_l
+							   &system_vcore &s2idle>;
+		};
+
+		cpu2: cpu@2 {
+			device_type = "cpu";
+			compatible = "arm,cortex-a78";
+			reg = <0x2>;
+			enable-method = "psci";
+			cpu-idle-states = <&cpuoff_l &clusteroff_l &mcusysoff_l
+							   &system_vcore &s2idle>;
+		};
+
+		cpu3: cpu@3 {
+			device_type = "cpu";
+			compatible = "arm,cortex-a78";
+			reg = <0x3>;
+			enable-method = "psci";
+			cpu-idle-states = <&cpuoff_l &clusteroff_l &mcusysoff_l
+							   &system_vcore &s2idle>;
+		};
+
+		/* Cluster 1, Cortex-A55 */
+		cpu4: cpu@4 {
+			device_type = "cpu";
+			compatible = "arm,cortex-a78";
+			reg = <0x4>;
+			enable-method = "psci";
+			cpu-idle-states = <&cpuoff_b &clusteroff_b &mcusysoff_b
+							   &system_vcore &s2idle>;
+		};
+
+		cpu5: cpu@5 {
+			device_type = "cpu";
+			compatible = "arm,cortex-a78";
+			reg = <0x5>;
+			enable-method = "psci";
+			cpu-idle-states = <&cpuoff_b &clusteroff_b &mcusysoff_b
+							   &system_vcore &s2idle>;
+		};
+
+		cpu6: cpu@6 {
+			device_type = "cpu";
+			compatible = "arm,cortex-a78";
+			reg = <0x6>;
+			enable-method = "psci";
+			cpu-idle-states = <&cpuoff_b &clusteroff_b &mcusysoff_b
+							   &system_vcore &s2idle>;
+		};
+
+		cpu7: cpu@7 {
+			device_type = "cpu";
+			compatible = "arm,cortex-a78";
+			reg = <0x7>;
+			enable-method = "psci";
+			cpu-idle-states = <&cpuoff_b &clusteroff_b &mcusysoff_b
+							   &system_vcore &s2idle>;
+		};
+
+		cpu-map {
+			cluster0 {
+				core0 {
+					cpu = <&cpu0>;
+				};
+				core1 {
+					cpu = <&cpu1>;
+				};
+				core2 {
+					cpu = <&cpu2>;
+				};
+				core3 {
+					cpu = <&cpu3>;
+				};
+			};
+			cluster1 {
+				core0 {
+					cpu = <&cpu4>;
+				};
+				core1 {
+					cpu = <&cpu5>;
+				};
+				core2 {
+					cpu = <&cpu6>;
+				};
+				core3 {
+					cpu = <&cpu7>;
+				};
+			};
+		};
+
+		idle-states {
+			entry-method = "psci";
+
+			cpuoff_l: cpuoff-l {
+				compatible = "arm,idle-state";
+				arm,psci-suspend-param = <0x00010000>;
+				local-timer-stop;
+				entry-latency-us = <25>;
+				exit-latency-us = <57>;
+				min-residency-us = <5700>;
+			};
+
+			cpuoff_b: cpuoff-b {
+				compatible = "arm,idle-state";
+				arm,psci-suspend-param = <0x00010000>;
+				local-timer-stop;
+				entry-latency-us = <35>;
+				exit-latency-us = <82>;
+				min-residency-us = <1890>;
+			};
+
+			clusteroff_l: clusteroff-l {
+				compatible = "arm,idle-state";
+				arm,psci-suspend-param = <0x01010001>;
+				local-timer-stop;
+				entry-latency-us = <57>;
+				exit-latency-us = <134>;
+				min-residency-us = <5700>;
+			};
+
+			clusteroff_b: clusteroff-b {
+				compatible = "arm,idle-state";
+				arm,psci-suspend-param = <0x01010001>;
+				local-timer-stop;
+				entry-latency-us = <50>;
+				exit-latency-us = <144>;
+				min-residency-us = <2460>;
+			};
+
+			mcusysoff_l: mcusysoff-l {
+				compatible = "arm,idle-state";
+				arm,psci-suspend-param = <0x02010007>;
+				local-timer-stop;
+				entry-latency-us = <863>;
+				exit-latency-us = <1237>;
+				min-residency-us = <5700>;
+			};
+
+			mcusysoff_b: mcusysoff-b {
+				compatible = "arm,idle-state";
+				arm,psci-suspend-param = <0x02010007>;
+				local-timer-stop;
+				entry-latency-us = <648>;
+				exit-latency-us = <1172>;
+				min-residency-us = <4570>;
+			};
+
+			system_vcore: system-vcore {
+				compatible = "arm,idle-state";
+				arm,psci-suspend-param = <0x020100ff>;
+				local-timer-stop;
+				entry-latency-us = <2400>;
+				exit-latency-us = <4800>;
+				min-residency-us = <35200>;
+			};
+
+			s2idle: s2idle {
+				compatible = "arm,idle-state";
+				arm,psci-suspend-param = <0x020180ff>;
+				local-timer-stop;
+				entry-latency-us = <10000>;
+				exit-latency-us = <10000>;
+				min-residency-us = <4294967295>;
+			};
+		};
+	};
+
+	clk26m: oscillator {
+		compatible = "fixed-clock";
+		#clock-cells = <0>;
+		clock-frequency = <26000000>;
+		clock-output-names = "clk26m";
+	};
+
+	psci {
+		compatible = "arm,psci-1.0";
+		method = "smc";
+	};
+
+	soc {
+		#address-cells = <2>;
+		#size-cells = <2>;
+		compatible = "simple-bus";
+		ranges;
+
+		/* TODO: PERIcfg Clocks */
+		pericfg_ao: syscon@11036000 {
+			compatible = "mediatek,mt6878-pericfg_ao", "syscon";
+			reg = <0 0x11036000 0 0x1000>;
+			#clock-cells = <1>;
+		};
+
+		gic: interrupt-controller@c000000 {
+			compatible = "arm,gic-v3";
+			#interrupt-cells = <3>;
+			interrupt-parent = <&gic>;
+			interrupt-controller;
+			reg = <0 0xc000000 0 0x40000>,	/* GICD */
+				  <0 0xc040000 0 0x200000>;	/* GICR */
+
+			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
+
+			ppi-partitions {
+				ppi_cluster0: interrupt-partition-0 {
+					affinity = <&cpu0 &cpu1 &cpu2 &cpu3>;
+				};
+				ppi_cluster1: interrupt-partition-1 {
+					affinity = <&cpu4 &cpu5 &cpu6 &cpu7>;
+				};
+			};
+		};
+
+		apdma: dma-controller@11300b00 {
+			compatible = "mediatek,mt6878-uart-dma", "mediatek,mt6985-uart-dma";
+				reg =  <0 0x11300b00 0 0x80>,
+					   <0 0x11300b80 0 0x80>,
+					   <0 0x11300c00 0 0x80>,
+					   <0 0x11300c80 0 0x80>,
+					   <0 0x11300d00 0 0x80>,
+					   <0 0x11300d80 0 0x80>;
+			interrupts =  <GIC_SPI 432 IRQ_TYPE_LEVEL_HIGH 0>,
+						  <GIC_SPI 433 IRQ_TYPE_LEVEL_HIGH 0>,
+						  <GIC_SPI 434 IRQ_TYPE_LEVEL_HIGH 0>,
+						  <GIC_SPI 435 IRQ_TYPE_LEVEL_HIGH 0>,
+						  <GIC_SPI 436 IRQ_TYPE_LEVEL_HIGH 0>,
+						  <GIC_SPI 437 IRQ_TYPE_LEVEL_HIGH 0>;
+			//clocks = <&pericfg_ao CLK_PERAOP_DMA_B>;
+			//clock-names = "apdma";
+			dma-requests = <6>;
+			#dma-cells = <1>;
+		};
+
+		uart0: serial@11001000 {
+			compatible = "mediatek,mt6577-uart";
+			reg = <0 0x11001000 0 0x1000>;
+			interrupts = <GIC_SPI 397 IRQ_TYPE_LEVEL_HIGH 0>;
+			clocks = <&clk26m>/*, <&pericfg_ao CLK_PERAOP_UART0> */;
+			clock-names = "baud", "bus";
+			dmas = <&apdma 0 &apdma 1>;
+			dma-names = "tx", "rx";
+			uart-line = <0>;
+		};
+
+		uart1: serial@11002000 {
+			compatible = "mediatek,mt6577-uart";
+			reg = <0 0x11002000 0 0x1000>;
+			interrupts = <GIC_SPI 398 IRQ_TYPE_LEVEL_HIGH 0>;
+			clocks = <&clk26m>/*, <&pericfg_ao CLK_PERAOP_UART1> */;
+			clock-names = "baud", "bus";
+			dmas = <&apdma 2 &apdma 3>;
+			dma-names = "tx", "rx";
+			uart-line = <1>;
+		};
+
+		uart2: serial@11003000 {
+			compatible = "mediatek,mt6577-uart";
+			reg = <0 0x11003000 0 0x1000>;
+			interrupts = <GIC_SPI 399 IRQ_TYPE_LEVEL_HIGH 0>;
+			clocks = <&clk26m>/*, <&pericfg_ao CLK_PERAOP_UART2> */;
+			clock-names = "baud", "bus";
+			dmas = <&apdma 4 &apdma 5>;
+			dma-names = "tx", "rx";
+			uart-line = <2>;
+		};
+	};
+
+	timer {
+		compatible = "arm,armv8-timer";
+		interrupt-parent = <&gic>;
+		interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_HIGH 0>,
+				<GIC_PPI 14 IRQ_TYPE_LEVEL_HIGH 0>,
+				<GIC_PPI 11 IRQ_TYPE_LEVEL_HIGH 0>,
+				<GIC_PPI 10 IRQ_TYPE_LEVEL_HIGH 0>;
+		clock-frequency = <13000000>;
+	};
+};
+
+
